@@ -1,37 +1,164 @@
-# Esp32_Wifi_Router
-Paramétrage d'un ESP32-C6 pour en faire un point d'accès Wifi
+# ESP32-C6 WiFi Router (NAT)
 
+Configuration d’un **ESP32-C6** pour le transformer en **routeur WiFi avec NAT**.
 
-Matériel nécessaire
-    - Un ESP32 C6 
-    - Un cable USBC qui permet le transport de données
-    - Une alimentation 5V - 2A
+Ce projet permet d’utiliser l’ESP32-C6 comme point d’accès WiFi capable de partager une connexion réseau.
 
-Mise en place
-     🚀 Identification du port série utilisé par le module ESP
+---
 
-    Il faut identifier sur quel port l'ESP se connecte. Pour cela lancer la commande (SANS BRANCHER l'ESP)
-    ls /dev/ttyACM*
-    Vous devriez voir les ports série présents. 
-    Ensuite vous branchez l'ESP et retapez la commande
-    ls /dev/ttyACM*
-    👉 Le nouveau port apparu = ton ESP32.
+## 📋 Table des matières
 
+* [Présentation](#présentation)
+* [Matériel requis](#matériel-requis)
+* [Prérequis logiciel](#prérequis-logiciel)
+* [Identification du port série](#identification-du-port-série)
+* [Test de communication](#test-de-communication)
+* [Installation du firmware](#installation-du-firmware)
+* [Flash du firmware](#flash-du-firmware)
+* [Résultat attendu](#résultat-attendu)
+* [Dépannage](#dépannage)
+* [Licence](#licence)
 
-    🚀 Test de la communication
+---
 
-    esptool.py --port /dev/ttyACM0 chip_id (remplace par le bon port)
+## 📖 Présentation
 
-    Si ça répond avec un Chip ID → tout est parfait côté système.
+Ce projet utilise le firmware **esp32_nat_router_extended** pour transformer un ESP32-C6 en :
 
- 🚀 Installer le bin
-    Il ne reste plus qu'à flasher la carte avec le bon binaire. Tu le trouve ici :
+* Point d'accès WiFi
+* Routeur NAT
+* Extenseur de réseau léger
+* Solution embarquée basse consommation
 
-    ## Flashing the prebuild binaries
-- Download [latest release](https://github.com/dchristl/esp32_nat_router_extended/releases/latest)
-  * Download esp32nat_extended_full_vX.X.X.zip for fresh install
-  * Download esp32nat_extended_update_vX.X.X.zip for update
+Firmware utilisé :
+https://github.com/dchristl/esp32_nat_router_extended
 
-et le code pour flasher, en remplaçant par le bon numéro de port
+---
 
-    esptool --chip esp32c6 --port /dev/ttyACM7 write_flash 0x0 esp32nat_extended_full_vX.X.X.bin
+## 🧰 Matériel requis
+
+* ESP32-C6
+* Câble USB-C compatible données
+* Alimentation 5V – 2A
+* Ordinateur sous Linux (ou compatible esptool)
+
+---
+
+## 💻 Prérequis logiciel
+
+* Python 3
+* esptool
+
+Installation d’esptool si nécessaire :
+
+```bash
+pip install esptool
+```
+
+---
+
+## 🔎 Identification du port série
+
+### 1. Lister les ports disponibles (ESP débranché)
+
+```bash
+ls /dev/ttyACM*
+```
+
+### 2. Brancher l’ESP32-C6
+
+Relancer la commande :
+
+```bash
+ls /dev/ttyACM*
+```
+
+👉 Le nouveau port détecté correspond à l’ESP32
+Exemple : `/dev/ttyACM0`
+
+---
+
+## 🚀 Test de communication
+
+```bash
+esptool.py --port /dev/ttyACM0 chip_id
+```
+
+Remplacer le port par le vôtre.
+
+Si un **Chip ID** est retourné, la communication fonctionne correctement.
+
+---
+
+## 📦 Installation du firmware
+
+Télécharger la dernière version :
+
+https://github.com/dchristl/esp32_nat_router_extended/releases/latest
+
+### Choisir le bon fichier :
+
+* `esp32nat_extended_full_vX.X.X.zip` → Installation complète
+* `esp32nat_extended_update_vX.X.X.zip` → Mise à jour
+
+Extraire le fichier `.bin` avant le flash.
+
+---
+
+## 🔥 Flash du firmware
+
+```bash
+esptool --chip esp32c6 --port /dev/ttyACM0 write_flash 0x0 esp32nat_extended_full_vX.X.X.bin
+```
+
+Adapter :
+
+* Le port série
+* Le nom exact du fichier `.bin`
+
+---
+
+## ✅ Résultat attendu
+
+Après redémarrage :
+
+* L’ESP32-C6 crée un point d’accès WiFi
+* Connexion possible au réseau généré
+* Interface d’administration accessible selon la configuration du firmware
+
+---
+
+## 🛠 Dépannage
+
+### Permission refusée sur le port série
+
+```bash
+sudo usermod -a -G dialout $USER
+```
+
+Puis redémarrer la session.
+
+### Aucun port détecté
+
+* Vérifier que le câble USB supporte les données
+* Tester un autre port USB
+* Vérifier l’alimentation
+
+---
+
+## 📜 Licence
+
+Ce projet repose sur le firmware développé par dchristl.
+Merci de consulter le dépôt officiel pour les conditions de licence.
+
+---
+
+## 🤝 Contribution
+
+Les contributions sont les bienvenues :
+
+* Issues
+* Pull requests
+* Suggestions d’amélioration
+
+---
