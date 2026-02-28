@@ -1,0 +1,27 @@
+substitutions:
+  device_name: "esp32-router"
+
+esphome:
+  name: "${device_name}"
+
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf
+
+logger:
+
+api:
+
+ota:
+  password: !secret ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  ap:
+    ssid: "ESP32-Repeater"
+    password: !secret ap_password
+
+captive_portal:
